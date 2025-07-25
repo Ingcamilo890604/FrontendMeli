@@ -1,0 +1,119 @@
+<div class="seller-info" *ngIf="product">
+  <!-- Stock & Shipping -->
+  <div class="stock-shipping">
+    <div class="stock-available">
+      <span class="stock-text">Stock disponible</span>
+    </div>
+    <div class="quantity">
+      <span>Cantidad: </span>
+      <strong>1 unidad</strong>
+      <small *ngIf="product.availableQuantity">({{ product.availableQuantity }}+ disponibles)</small>
+      <small *ngIf="product.stock && !product.availableQuantity">({{ product.stock }}+ disponibles)</small>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="btn-primary">Comprar ahora</button>
+    <button class="btn-secondary">Agregar al carrito</button>
+  </div>
+
+  <!-- Shipping Info -->
+  <div class="shipping-info" *ngIf="product.shipping">
+    <div class="shipping-item">
+      <span class="icon">🚚</span>
+      <div>
+        <div class="shipping-text">
+          <span *ngIf="product.shipping.freeShipping" class="free-shipping">Envío gratis</span>
+          a todo el país
+        </div>
+        <div class="shipping-details">
+          Conoce los tiempos y las formas de envío.
+          <br>Calcular cuándo llega
+        </div>
+      </div>
+    </div>
+
+    <div class="shipping-item">
+      <span class="icon">📍</span>
+      <div>
+        <div class="shipping-text">Devolución gratis.</div>
+        <div class="shipping-details">
+          Tienes 30 días desde que lo recibes.
+        </div>
+      </div>
+    </div>
+
+    <div class="shipping-item">
+      <span class="icon">🛡️</span>
+      <div>
+        <div class="shipping-text">Compra Protegida.</div>
+        <div class="shipping-details">
+          Recibes el producto que esperabas o te devolvemos tu dinero.
+        </div>
+      </div>
+    </div>
+
+    <div class="shipping-item">
+      <span class="icon">🏆</span>
+      <div class="shipping-text">12 meses de garantía de fábrica.</div>
+    </div>
+  </div>
+
+  <!-- Seller Info -->
+  <div class="official-store" *ngIf="product.seller">
+    <div class="store-badge" *ngIf="product.seller.isOfficialStore">
+      <span class="badge">Tienda Oficial</span>
+    </div>
+    <div class="store-info">
+      <div class="store-name">{{ product.seller.name }}</div>
+      
+      <!-- Show rating if available from API -->
+      <div class="store-details" *ngIf="product.seller.rating">
+        <span class="store-icon">⭐</span>
+        <span>Rating: {{ product.seller.rating }}</span>
+      </div>
+      
+      <!-- Show reputation if available from mock data -->
+      <div class="store-details" *ngIf="product.seller.reputation">
+        <span class="store-icon">👑</span>
+        <span>MercadoLíder {{ product.seller.reputation.level }}</span>
+      </div>
+      
+      <!-- Show contact info if available -->
+      <div class="store-contact" *ngIf="product.seller.email || product.seller.phone">
+        <div *ngIf="product.seller.email">Email: {{ product.seller.email }}</div>
+        <div *ngIf="product.seller.phone">Phone: {{ product.seller.phone }}</div>
+      </div>
+      
+      <div class="store-stats" *ngIf="product.seller.reputation">+{{ product.seller.reputation.totalTransactions }}M Productos</div>
+    </div>
+  </div>
+
+  <!-- Payment Methods -->
+  <div class="payment-methods">
+    <h4>Medios de pago</h4>
+    <div class="payment-item">
+      <span class="payment-icon">💳</span>
+      <div>
+        <div class="payment-title">¡Paga en hasta 12 cuotas sin interés!</div>
+        <div class="payment-details">Tarjetas de débito</div>
+      </div>
+    </div>
+    
+    <div class="payment-cards">
+      <div class="card-icons">
+        <span class="card-icon visa">VISA</span>
+        <span class="card-icon master">MC</span>
+        <span class="card-icon oca">OCA</span>
+      </div>
+    </div>
+
+    <div class="payment-item">
+      <span class="payment-icon">💵</span>
+      <div class="payment-title">Efectivo</div>
+    </div>
+
+    <a href="#" class="see-all-payments">Conoce otros medios de pago</a>
+  </div>
+</div>

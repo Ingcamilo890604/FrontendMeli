@@ -1,0 +1,19 @@
+<div class="product-gallery">
+  <div class="thumbnails">
+    <img 
+      *ngFor="let image of processedImages; let i = index"
+      [src]="image.url"
+      [alt]="image.alt"
+      [class.active]="i === selectedIndex"
+      (click)="selectImage(i)"
+      class="thumbnail"
+    />
+  </div>
+  <div class="main-image">
+    <img 
+      [src]="selectedImage?.url"
+      [alt]="selectedImage?.alt"
+      class="main-img"
+    />
+  </div>
+</div>

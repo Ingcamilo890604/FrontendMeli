@@ -3,18 +3,20 @@ export interface Product {
   title: string;
   price: number;
   originalPrice?: number;
-  currency: string;
-  condition: string;
-  availableQuantity: number;
-  soldQuantity: number;
+  currency?: string;
+  condition?: string;
+  availableQuantity?: number;
+  soldQuantity?: number;
   description: string;
-  images: ProductImage[];
-  specifications: ProductSpecification[];
+  images: string[] | ProductImage[];
+  specifications?: ProductSpecification[];
   seller: Seller;
-  shipping: ShippingInfo;
+  shipping?: ShippingInfo;
   paymentMethods: PaymentMethod[];
-  rating: ProductRating;
-  breadcrumb: BreadcrumbItem[];
+  rating?: ProductRating;
+  breadcrumb?: BreadcrumbItem[];
+  stock?: number;
+  reviews?: Review[];
 }
 
 export interface ProductImage {
@@ -31,9 +33,12 @@ export interface ProductSpecification {
 export interface Seller {
   id: string;
   name: string;
-  reputation: SellerReputation;
-  location: string;
-  isOfficialStore: boolean;
+  email?: string;
+  phone?: string;
+  rating?: number;
+  reputation?: SellerReputation;
+  location?: string;
+  isOfficialStore?: boolean;
 }
 
 export interface SellerReputation {
@@ -64,6 +69,15 @@ export interface ProductRating {
 export interface BreadcrumbItem {
   label: string;
   url?: string;
+}
+
+export interface Review {
+  id: string;
+  userId: string;
+  userName: string;
+  comment: string;
+  rating: number;
+  createdAt: string;
 }
 
 export interface RelatedProduct {

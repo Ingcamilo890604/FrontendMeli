@@ -1,0 +1,25 @@
+<div class="product-specifications" *ngIf="product">
+  <!-- Specifications Section -->
+  <div *ngIf="product.specifications && product.specifications.length > 0">
+    <h2>Características del producto</h2>
+    
+    <div class="specs-grid">
+      <div *ngFor="let spec of product.specifications" class="spec-item">
+        <div class="spec-name">{{ spec.name }}</div>
+        <div class="spec-value">{{ spec.value }}</div>
+      </div>
+    </div>
+
+    <button class="view-all-specs">Ver todas las características</button>
+  </div>
+
+  <!-- Description Section -->
+  <div class="description-section" *ngIf="getDescriptionParagraphs().length > 0">
+    <h2>Descripción</h2>
+    <div class="description-content">
+      <p *ngFor="let paragraph of getDescriptionParagraphs()">
+        {{ paragraph }}
+      </p>
+    </div>
+  </div>
+</div>

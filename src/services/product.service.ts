@@ -1,16 +1,97 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, map, catchError } from 'rxjs';
 import { Product, RelatedProduct } from '../models/product.model';
+
+// Interface for simplified product search results
+export interface ProductSearchResult {
+  id: string;
+  title: string;
+  price: number;
+  currency?: string;
+  image: string;
+  description?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
+  private apiUrl = 'http://localhost:8085/api';
   
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   getProduct(id: string): Observable<Product> {
-    // Mock data - replace with actual HTTP call
+    return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
+  }
+  
+  /**
+   * Get all products from the API
+   */
+  getAllProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products`).pipe(
+      catchError(error => {
+        console.error('Error fetching products:', error);
+        return of([]); // Return empty array on error
+      })
+    );
+  }
+  
+  /**
+   * Search products based on a query string
+   * @param query The search query
+   * @returns Observable of simplified product search results
+   */
+  searchProducts(query: string): Observable<ProductSearchResult[]> {
+    if (!query || query.trim() === '') {
+      return of([]);
+    }
+    
+    const normalizedQuery = query.toLowerCase().trim();
+    
+    return this.getAllProducts().pipe(
+      map(products => {
+        // Filter products that match the query
+        return products
+          .filter(product => 
+            product.title.toLowerCase().includes(normalizedQuery) || 
+            (product.description && product.description.toLowerCase().includes(normalizedQuery)) ||
+            (product.seller && product.seller.name.toLowerCase().includes(normalizedQuery))
+          )
+          // Map to simplified search results
+          .map(product => this.mapToSearchResult(product))
+          // Limit to 5 results for better UX
+          .slice(0, 5);
+      })
+    );
+  }
+  
+  /**
+   * Map a full Product to a simplified ProductSearchResult
+   */
+  private mapToSearchResult(product: Product): ProductSearchResult {
+    // Get the first image URL
+    let imageUrl = '';
+    if (product.images && product.images.length > 0) {
+      if (typeof product.images[0] === 'string') {
+        imageUrl = product.images[0] as string;
+      } else {
+        imageUrl = (product.images[0] as any).url || '';
+      }
+    }
+    
+    return {
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      currency: product.currency || 'US$',
+      image: imageUrl,
+      description: product.description ? product.description.substring(0, 100) + '...' : undefined
+    };
+  }
+  
+  // Keep the mock method for backward compatibility or testing
+  getMockProduct(id: string): Observable<Product> {
     const mockProduct: Product = {
       id: 'MLA123456789',
       title: 'Samsung Galaxy A55 5G Dual SIM 256 GB azul oscuro 8 GB RAM',

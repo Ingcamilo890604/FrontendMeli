@@ -1,0 +1,219 @@
+.seller-info {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-width: 350px;
+}
+
+.stock-shipping {
+  margin-bottom: 24px;
+}
+
+.stock-available {
+  color: #00a650;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.quantity {
+  font-size: 14px;
+  color: #666;
+}
+
+.quantity small {
+  color: #999;
+  margin-left: 4px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.btn-primary {
+  background: #3483FA;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #2968c8;
+}
+
+.btn-secondary {
+  background: rgba(52, 131, 250, 0.1);
+  color: #3483FA;
+  border: 1px solid #3483FA;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(52, 131, 250, 0.2);
+}
+
+.shipping-info {
+  margin-bottom: 24px;
+}
+
+.shipping-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.shipping-text {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.free-shipping {
+  color: #00a650;
+}
+
+.shipping-details {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.official-store {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.store-badge {
+  margin-bottom: 8px;
+}
+
+.badge {
+  background: #3483FA;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.store-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.store-details {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.store-icon {
+  font-size: 12px;
+}
+
+.store-stats {
+  font-size: 12px;
+  color: #999;
+}
+
+.payment-methods h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.payment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.payment-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.payment-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.payment-details {
+  font-size: 12px;
+  color: #666;
+}
+
+.payment-cards {
+  margin: 12px 0 16px 36px;
+}
+
+.card-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.card-icon {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.card-icon.visa {
+  background: #1a1f71;
+}
+
+.card-icon.master {
+  background: #eb001b;
+}
+
+.card-icon.oca {
+  background: #0066cc;
+}
+
+.see-all-payments {
+  color: #3483FA;
+  text-decoration: none;
+  font-size: 14px;
+  margin-left: 36px;
+}
+
+.see-all-payments:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .seller-info {
+    max-width: none;
+    margin-top: 24px;
+  }
+}
