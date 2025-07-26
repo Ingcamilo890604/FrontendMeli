@@ -145,7 +145,49 @@ export class ProductService {
    * Instead of using hardcoded mock data, it tries to fetch the product from the API
    * with a different endpoint or approach
    */
-
+  getMockProduct(id: string): Observable<Product> {
+    console.log('Fetching mock product with ID:', id);
+    // Try to get the product from a different endpoint or with a different approach
+    return this.http.get<Product>(`${this.apiUrl}/products/mock/${id}`).pipe(
+      map(product => {
+        console.log('Raw mock product from API:', product);
+        // Process image paths if they exist
+        if (product.images && product.images.length > 0) {
+          console.log('Processing mock images:', product.images);
+          product.images = this.processImagePaths(product.images);
+          console.log('Processed mock images:', product.images);
+        }
+        return product;
+      }),
+      catchError(error => {
+        console.error('Error fetching mock product:', error);
+        // Return a basic mock product as a last resort
+        return of({
+          id: id,
+          title: 'Product Not Available',
+          price: 0,
+          description: 'This product is currently not available.',
+          images: [],
+          stock: 0,
+          availableQuantity: 0,
+          seller: {
+            id: '0',
+            name: 'Unknown Seller',
+            isOfficialStore: false
+          },
+          reviews: [],
+          paymentMethods: [
+            {
+              id: 'default',
+              name: 'Default Payment Method',
+              type: 'card' as 'card', // Explicitly type as 'card' to satisfy PaymentMethod interface
+              icon: '💳'
+            }
+          ]
+        });
+      })
+    );
+  }
 
   getRelatedProducts(): Observable<RelatedProduct[]> {
     // Fetch related products from the backend API
