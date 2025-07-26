@@ -41,6 +41,14 @@
   color: #3483FA;
 }
 
+.star.half-filled {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(90deg, #3483FA 50%, #ddd 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .rating-text {
   font-size: 14px;
   color: #666;

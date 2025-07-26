@@ -1,19 +1,24 @@
 <div class="product-gallery">
   <div class="thumbnails">
-    <img 
-      *ngFor="let image of processedImages; let i = index"
-      [src]="image.url"
-      [alt]="image.alt"
-      [class.active]="i === selectedIndex"
-      (click)="selectImage(i)"
-      class="thumbnail"
-    />
+    @for (image of processedImages; track $index; let i = $index) {
+      <img
+        [src]="image.url"
+        [alt]="image.alt"
+        [class.active]="i === selectedIndex"
+        (click)="selectImage(i)"
+        class="thumbnail"
+        (load)="onImageLoad($event, i)"
+        (error)="onImageError($event, i)"
+      />
+    }
   </div>
   <div class="main-image">
-    <img 
+    <img
       [src]="selectedImage?.url"
       [alt]="selectedImage?.alt"
       class="main-img"
+      (load)="onMainImageLoad($event)"
+      (error)="onMainImageError($event)"
     />
   </div>
 </div>

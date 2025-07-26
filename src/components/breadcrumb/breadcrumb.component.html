@@ -1,11 +1,21 @@
-<nav class="breadcrumb" *ngIf="items.length > 0">
-  <span *ngFor="let item of items; let last = last" class="breadcrumb-item">
-    <a *ngIf="item.url && !last" [href]="item.url" class="breadcrumb-link">
-      {{ item.label }}
-    </a>
-    <span *ngIf="!item.url || last" class="breadcrumb-current">
-      {{ item.label }}
-    </span>
-    <span *ngIf="!last" class="breadcrumb-separator">></span>
-  </span>
-</nav>
+@if (items.length > 0) {
+  <nav class="breadcrumb">
+    @for (item of items; track $index; let last = $last) {
+      <span class="breadcrumb-item">
+        @if (item.url && !last) {
+          <a [href]="item.url" class="breadcrumb-link">
+            {{ item.label }}
+          </a>
+        }
+        @if (!item.url || last) {
+          <span class="breadcrumb-current">
+            {{ item.label }}
+          </span>
+        }
+        @if (!last) {
+          <span class="breadcrumb-separator">></span>
+        }
+      </span>
+    }
+  </nav>
+}

@@ -1,24 +1,30 @@
-<div class="related-products" *ngIf="products.length > 0">
-  <h2>Productos relacionados</h2>
-  <div class="products-container">
-    <div class="products-scroll">
-      <div *ngFor="let product of products" class="product-card">
-        <img [src]="product.image" [alt]="product.title" class="product-image">
-        <div class="product-info">
-          <h3 class="product-title">{{ product.title }}</h3>
-          <div class="product-price">
-            <span *ngIf="product.currency">{{ product.currency }}</span> {{ product.price }}
-            <!-- Only show these elements if they're needed in the future with dynamic data -->
-            <!-- <span class="price-cents">75</span> -->
-            <!-- <span class="discount">13% OFF</span> -->
+@if (products.length > 0) {
+  <div class="related-products">
+    <h2>Productos relacionados</h2>
+    <div class="products-container">
+      <div class="products-scroll">
+        @for (product of products; track $index) {
+          <div class="product-card">
+            <img [src]="product.image" [alt]="product.title" class="product-image">
+            <div class="product-info">
+              <h3 class="product-title">{{ product.title }}</h3>
+              <div class="product-price">
+                @if (product.currency) {
+                  <span>{{ product.currency }}</span>
+                } {{ product.price }}
+
+              </div>
+              <div class="product-meta">
+                <span class="installments">en 12 cuotas de $ 1.836,86 sin interés</span>
+                @if (product.freeShipping) {
+                  <span class="free-shipping">Envío gratis</span>
+                }
+              </div>
+            </div>
           </div>
-          <div class="product-meta">
-            <span class="installments">en 12 cuotas de $ 1.836,86 sin interés</span>
-            <span class="free-shipping" *ngIf="product.freeShipping">Envío gratis</span>
-          </div>
-        </div>
+        }
       </div>
+      <button class="scroll-btn scroll-btn-right">›</button>
     </div>
-    <button class="scroll-btn scroll-btn-right">›</button>
   </div>
-</div>
+}

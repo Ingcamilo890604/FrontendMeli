@@ -91,29 +91,5 @@
   </div>
 
   <!-- Payment Methods -->
-  <div class="payment-methods">
-    <h4>Medios de pago</h4>
-    <div class="payment-item">
-      <span class="payment-icon">💳</span>
-      <div>
-        <div class="payment-title">¡Paga en hasta 12 cuotas sin interés!</div>
-        <div class="payment-details">Tarjetas de débito</div>
-      </div>
-    </div>
-    
-    <div class="payment-cards">
-      <div class="card-icons">
-        <span class="card-icon visa">VISA</span>
-        <span class="card-icon master">MC</span>
-        <span class="card-icon oca">OCA</span>
-      </div>
-    </div>
-
-    <div class="payment-item">
-      <span class="payment-icon">💵</span>
-      <div class="payment-title">Efectivo</div>
-    </div>
-
-    <a href="#" class="see-all-payments">Conoce otros medios de pago</a>
-  </div>
+  <app-payment-method *ngIf="product.paymentMethods && product.paymentMethods.length > 0" [paymentMethods]="product.paymentMethods"></app-payment-method>
 </div>

@@ -10,6 +10,7 @@ import { ProductInfoComponent } from './components/product-info/product-info.com
 import { SellerInfoComponent } from './components/seller-info/seller-info.component';
 import { ProductSpecificationsComponent } from './components/product-specifications/product-specifications.component';
 import { RelatedProductsComponent } from './components/related-products/related-products.component';
+import { ReviewsComponent } from './components/reviews/reviews.component';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ import { RelatedProductsComponent } from './components/related-products/related-
     ProductInfoComponent,
     SellerInfoComponent,
     ProductSpecificationsComponent,
-    RelatedProductsComponent
+    RelatedProductsComponent,
+    ReviewsComponent
   ],
   template: `
     <div class="app-container">
@@ -43,36 +45,42 @@ import { RelatedProductsComponent } from './components/related-products/related-
                   (focus)="onSearchFocus()"
                   (blur)="onSearchBlur()"
                   (keydown)="onSearchKeydown($event)">
-                <button 
-                  *ngIf="searchQuery.length > 0" 
-                  class="clear-button"
-                  (mousedown)="clearSearch($event)">
-                  ✕
-                </button>
+                @if (searchQuery.length > 0) {
+                  <button 
+                    class="clear-button"
+                    (mousedown)="clearSearch($event)">
+                    ✕
+                  </button>
+                }
               </div>
               <button class="search-button" (click)="onSearchButtonClick($event)">🔍</button>
               
               <!-- Search suggestions dropdown -->
-              <div class="search-suggestions" *ngIf="showSuggestions && searchResults.length > 0">
-                <div 
-                  *ngFor="let result of searchResults; let i = index" 
-                  class="suggestion-item" 
-                  [class.selected]="i === selectedIndex"
-                  (mousedown)="selectProduct(result)">
-                  <div class="suggestion-image">
-                    <img [src]="result.image" [alt]="result.title">
-                  </div>
-                  <div class="suggestion-details">
-                    <div class="suggestion-title">{{ result.title }}</div>
-                    <div class="suggestion-price">{{ result.currency }} {{ result.price }}</div>
-                  </div>
+              @if (showSuggestions && searchResults.length > 0) {
+                <div class="search-suggestions">
+                  @for (result of searchResults; track $index; let i = $index) {
+                    <div 
+                      class="suggestion-item" 
+                      [class.selected]="i === selectedIndex"
+                      (mousedown)="selectProduct(result)">
+                      <div class="suggestion-image">
+                        <img [src]="result.image" [alt]="result.title">
+                      </div>
+                      <div class="suggestion-details">
+                        <div class="suggestion-title">{{ result.title }}</div>
+                        <div class="suggestion-price">{{ result.currency }} {{ result.price }}</div>
+                      </div>
+                    </div>
+                  }
                 </div>
-              </div>
+              }
               
               <!-- Loading indicator -->
-              <div class="search-loading" *ngIf="isSearching">
-                <div class="search-spinner"></div>
-              </div>
+              @if (isSearching) {
+                <div class="search-loading">
+                  <div class="search-spinner"></div>
+                </div>
+              }
             </div>
           </div>
           <div class="header-actions">
@@ -83,64 +91,83 @@ import { RelatedProductsComponent } from './components/related-products/related-
       </header>
 
       <!-- Product Detail View -->
-      <main class="main-content" *ngIf="product && !showSearchResults">
-        <div class="container">
-          <app-breadcrumb [items]="product.breadcrumb || []"></app-breadcrumb>
-          
-          <div class="product-layout">
-            <div class="product-main">
-              <app-product-gallery [images]="product.images || []"></app-product-gallery>
-              <app-product-info [product]="product"></app-product-info>
+      @if (product && !showSearchResults) {
+        <main class="main-content">
+          <div class="container">
+            <app-breadcrumb [items]="product.breadcrumb || []"></app-breadcrumb>
+            
+            <div class="product-layout">
+              <div class="product-main">
+                <app-product-gallery [images]="product.images || []"></app-product-gallery>
+                <app-product-info [product]="product"></app-product-info>
+              </div>
+              <div class="product-sidebar">
+                <app-seller-info [product]="product"></app-seller-info>
+              </div>
             </div>
-            <div class="product-sidebar">
-              <app-seller-info [product]="product"></app-seller-info>
-            </div>
-          </div>
 
-          <app-product-specifications [product]="product"></app-product-specifications>
-          <app-related-products [products]="relatedProducts"></app-related-products>
-        </div>
-      </main>
+            <app-product-specifications [product]="product"></app-product-specifications>
+            @if (product.reviews) {
+              <app-reviews [reviews]="product.reviews"></app-reviews>
+            }
+            <app-related-products [products]="relatedProducts"></app-related-products>
+          </div>
+        </main>
+      }
 
       <!-- Search Results View -->
-      <main class="main-content" *ngIf="showSearchResults">
-        <div class="container">
-          <div class="search-results-header">
-            <h2>Resultados de búsqueda para "{{ searchQuery }}"</h2>
-            <p *ngIf="searchResults.length > 0">{{ searchResults.length }} productos encontrados</p>
-          </div>
-          
-          <div *ngIf="searchResults.length > 0" class="search-results-grid">
-            <div *ngFor="let result of searchResults" class="search-result-card" (click)="selectProduct(result)">
-              <div class="search-result-image">
-                <img [src]="result.image" [alt]="result.title">
-              </div>
-              <div class="search-result-info">
-                <h3 class="search-result-title">{{ result.title }}</h3>
-                <p class="search-result-price">{{ result.currency }} {{ result.price }}</p>
-                <p class="search-result-description" *ngIf="result.description">{{ result.description }}</p>
-                <div class="search-result-shipping">Envío gratis</div>
-              </div>
+      @if (showSearchResults) {
+        <main class="main-content">
+          <div class="container">
+            <div class="search-results-header">
+              <h2>Resultados de búsqueda para "{{ searchQuery }}"</h2>
+              @if (searchResults.length > 0) {
+                <p>{{ searchResults.length }} productos encontrados</p>
+              }
             </div>
+            
+            @if (searchResults.length > 0) {
+              <div class="search-results-grid">
+                @for (result of searchResults; track $index) {
+                  <div class="search-result-card" (click)="selectProduct(result)">
+                    <div class="search-result-image">
+                      <img [src]="result.image" [alt]="result.title">
+                    </div>
+                    <div class="search-result-info">
+                      <h3 class="search-result-title">{{ result.title }}</h3>
+                      <p class="search-result-price">{{ result.currency }} {{ result.price }}</p>
+                      @if (result.description) {
+                        <p class="search-result-description">{{ result.description }}</p>
+                      }
+                      <div class="search-result-shipping">Envío gratis</div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+            
+            @if (searchResults.length === 0 && !isSearching) {
+              <div class="no-results">
+                <p>No se encontraron productos que coincidan con "{{ searchQuery }}"</p>
+                <p>Sugerencias:</p>
+                <ul>
+                  <li>Revisa la ortografía de la palabra.</li>
+                  <li>Utiliza palabras más genéricas o menos palabras.</li>
+                  <li>Navega por las categorías para encontrar un producto similar.</li>
+                </ul>
+              </div>
+            }
           </div>
-          
-          <div *ngIf="searchResults.length === 0 && !isSearching" class="no-results">
-            <p>No se encontraron productos que coincidan con "{{ searchQuery }}"</p>
-            <p>Sugerencias:</p>
-            <ul>
-              <li>Revisa la ortografía de la palabra.</li>
-              <li>Utiliza palabras más genéricas o menos palabras.</li>
-              <li>Navega por las categorías para encontrar un producto similar.</li>
-            </ul>
-          </div>
-        </div>
-      </main>
+        </main>
+      }
 
       <!-- Loading State -->
-      <div *ngIf="!product && !showSearchResults && isSearching" class="loading">
-        <div class="loading-spinner"></div>
-        <p>Cargando...</p>
-      </div>
+      @if (!product && !showSearchResults && isSearching) {
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>Cargando...</p>
+        </div>
+      }
     </div>
   `,
   styles: [`
@@ -771,19 +798,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
   loadProduct(id: string) {
     this.product = null; // Reset product to show loading state
+    this.isSearching = true; // Show loading indicator
+    
+    // Fetch product data from the backend API
     this.productService.getProduct(id).subscribe({
       next: (product) => {
         // Process the product data to ensure it has all required fields
         this.processProductData(product);
-        console.log('Product loaded:', this.product);
+        console.log('Product loaded from API:', this.product);
+        this.isSearching = false;
       },
       error: (error) => {
-        console.error('Error loading product:', error);
-        // Fallback to mock data in case of error
-        this.productService.getMockProduct(id).subscribe(mockProduct => {
-          this.product = mockProduct;
-          console.log('Loaded mock product as fallback');
-        });
+        console.error('Error loading product from API:', error);
+        this.isSearching = false;
+
       }
     });
   }
@@ -793,6 +821,7 @@ export class AppComponent implements OnInit, OnDestroy {
    * and convert formats as needed
    */
   private processProductData(product: any) {
+    console.log('Processing product data:', product);
     if (!product) return;
     
     // Ensure we have a breadcrumb array even if the API doesn't provide one
@@ -820,6 +849,124 @@ export class AppComponent implements OnInit, OnDestroy {
         average: totalRating / product.reviews.length,
         totalReviews: product.reviews.length
       };
+    }
+    
+    // Process images to ensure they are ProductImage objects
+    if (product.images && product.images.length > 0) {
+      console.log("Estas son las urls de las imagenes: " + product.images);
+      if (typeof product.images[0] === 'string') {
+        product.images = product.images.map((url: string, index: number) => ({
+          id: index.toString(),
+          url: url,
+          alt: `${product.title} - Image ${index + 1}`
+        }));
+      }
+    }
+    
+    // Add payment methods if they don't exist or are empty
+    console.log('Before adding payment methods:', product.paymentMethods);
+    if (!product.paymentMethods || product.paymentMethods.length === 0) {
+      product.paymentMethods = [
+        {
+          id: 'visa',
+          name: 'Visa',
+          type: 'card',
+          installments: 12,
+          icon: '💳'
+        },
+        {
+          id: 'mastercard',
+          name: 'Mastercard',
+          type: 'card',
+          installments: 12,
+          icon: '💳'
+        },
+        {
+          id: 'amex',
+          name: 'American Express',
+          type: 'card',
+          installments: 6,
+          icon: '💳'
+        },
+        {
+          id: 'cash',
+          name: 'Efectivo',
+          type: 'cash',
+          icon: '💵'
+        },
+        {
+          id: 'bank-transfer',
+          name: 'Transferencia bancaria',
+          type: 'transfer',
+          icon: '🏦'
+        }
+      ];
+      console.log('After adding payment methods:', product.paymentMethods);
+    }
+    
+    // Add reviews if they don't exist or are empty
+    console.log('Before adding reviews:', product.reviews);
+    if (!product.reviews || product.reviews.length === 0) {
+      product.reviews = [
+        {
+          id: 'rev-001',
+          userId: 'user-001',
+          userName: 'María García',
+          comment: 'Excelente producto, muy buena calidad y entrega rápida.',
+          rating: 5,
+          createdAt: '2025-07-20T14:30:00'
+        },
+        {
+          id: 'rev-002',
+          userId: 'user-002',
+          userName: 'Carlos Rodríguez',
+          comment: 'Buen producto, pero tardó un poco en llegar.',
+          rating: 4,
+          createdAt: '2025-07-15T09:45:00'
+        },
+        {
+          id: 'rev-003',
+          userId: 'user-003',
+          userName: 'Ana Martínez',
+          comment: 'Cumple con lo esperado, buena relación calidad-precio.',
+          rating: 4,
+          createdAt: '2025-07-12T16:20:00'
+        },
+        {
+          id: 'rev-004',
+          userId: 'user-004',
+          userName: 'Pedro Sánchez',
+          comment: 'No es exactamente lo que esperaba, pero funciona bien.',
+          rating: 3,
+          createdAt: '2025-07-08T11:10:00'
+        },
+        {
+          id: 'rev-005',
+          userId: 'user-005',
+          userName: 'Laura Fernández',
+          comment: 'Muy satisfecha con la compra, lo recomiendo.',
+          rating: 5,
+          createdAt: '2025-07-05T18:30:00'
+        },
+        {
+          id: 'rev-006',
+          userId: 'user-006',
+          userName: 'Javier López',
+          comment: 'Calidad de imagen espectacular',
+          rating: 5,
+          createdAt: '2025-07-10T18:45:00'
+        }
+      ];
+      console.log('After adding reviews:', product.reviews);
+      
+      // If we added reviews but don't have a rating, calculate it from the reviews
+      if (!product.rating) {
+        const totalRating = product.reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
+        product.rating = {
+          average: totalRating / product.reviews.length,
+          totalReviews: product.reviews.length
+        };
+      }
     }
     
     // Set the processed product

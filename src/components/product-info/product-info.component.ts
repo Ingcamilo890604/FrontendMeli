@@ -12,13 +12,45 @@ import { Product } from '../../models/product.model';
 export class ProductInfoComponent {
   @Input() product: Product | null = null;
 
-  getStars(rating: number | undefined): boolean[] {
+  getStars(rating: number | undefined): number[] {
     const stars = [];
     const validRating = rating || 0;
+    
     for (let i = 1; i <= 5; i++) {
-      stars.push(i <= validRating);
+      if (i <= Math.floor(validRating)) {
+        stars.push(1);
+      } else if (i - 0.5 <= validRating) {
+        stars.push(0.5);
+      } else {
+        stars.push(0);
+      }
     }
+    
     return stars;
+  }
+  
+  getRating(): number {
+    if (!this.product?.rating) return 0;
+    
+    if (typeof this.product.rating === 'number') {
+      return this.product.rating;
+    } else if (this.product.rating.average) {
+      return this.product.rating.average;
+    }
+    
+    return 0;
+  }
+  
+  getTotalReviews(): number {
+    if (!this.product?.rating) return 0;
+    
+    if (typeof this.product.rating === 'number') {
+      return this.product.reviews?.length || 0;
+    } else if (this.product.rating.totalReviews) {
+      return this.product.rating.totalReviews;
+    }
+    
+    return 0;
   }
 
   getDiscountPercentage(): number {

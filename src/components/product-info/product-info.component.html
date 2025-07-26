@@ -1,57 +1,79 @@
-<div class="product-info" *ngIf="product">
-  <div class="condition-stock" *ngIf="product.condition || product.soldQuantity">
-    <span class="condition" *ngIf="product.condition">{{ product.condition }}</span>
-    <span class="separator" *ngIf="product.condition && product.soldQuantity">|</span>
-    <span class="stock" *ngIf="product.soldQuantity">{{ product.soldQuantity }}+ vendidos</span>
-  </div>
+@if (product) {
+  <div class="product-info">
+    @if (product.condition || product.soldQuantity) {
+      <div class="condition-stock">
+        @if (product.condition) {
+          <span class="condition">{{ product.condition }}</span>
+        }
+        @if (product.condition && product.soldQuantity) {
+          <span class="separator">|</span>
+        }
+        @if (product.soldQuantity) {
+          <span class="stock">{{ product.soldQuantity }}+ vendidos</span>
+        }
+      </div>
+    }
 
-  <h1 class="product-title">{{ product.title }}</h1>
+    <h1 class="product-title">{{ product.title }}</h1>
 
-  <div class="rating" *ngIf="product.rating">
-    <div class="stars">
-      <span *ngFor="let star of getStars(product.rating.average)" 
-            class="star" 
-            [class.filled]="star">★</span>
-    </div>
-    <span class="rating-text">{{ product.rating.average }} ({{ product.rating.totalReviews }})</span>
-  </div>
+    @if (product.rating) {
+      <div class="rating">
+        <div class="stars">
+          @for (star of getStars(getRating()); track $index) {
+            <span class="star" [class.filled]="star === 1" [class.half-filled]="star === 0.5">★</span>
+          }
+        </div>
+        <span class="rating-text">{{ getRating() }} ({{ getTotalReviews() }})</span>
+      </div>
+    }
 
-  <div class="price-section">
-    <div class="original-price" *ngIf="product.originalPrice && product.currency">
-      {{ product.currency }} {{ product.originalPrice }}
+    <div class="price-section">
+      @if (product.originalPrice && product.currency) {
+        <div class="original-price">
+          {{ product.currency }} {{ product.originalPrice }}
+        </div>
+      }
+      <div class="current-price">
+        @if (product.currency) {
+          <span>{{ product.currency }}</span>
+        } {{ product.price }}
+        @if (product.originalPrice) {
+          <span class="discount">
+            {{ getDiscountPercentage() }}% OFF
+          </span>
+        }
+      </div>
+      <div class="installments">
+        en 12 cuotas de $ 1,814.06 sin interés
+      </div>
+      <div class="payment-promotion">
+        Ver los 6 medios de pago
+      </div>
     </div>
-    <div class="current-price">
-      <span *ngIf="product.currency">{{ product.currency }}</span> {{ product.price }}
-      <span class="discount" *ngIf="product.originalPrice">
-        {{ getDiscountPercentage() }}% OFF
-      </span>
-    </div>
-    <div class="installments">
-      en 12 cuotas de $ 1,814.06 sin interés
-    </div>
-    <div class="payment-promotion">
-      Ver los 6 medios de pago
-    </div>
-  </div>
 
-  <div class="key-features" *ngIf="product.specifications && product.specifications.length > 0">
-    <h3>Lo que tienes que saber de este producto</h3>
-    <ul>
-      <li *ngFor="let spec of product.specifications">
-        <strong>{{ spec.name }}:</strong> {{ spec.value }}
-      </li>
-    </ul>
-  </div>
+    @if (product.specifications && product.specifications.length > 0) {
+      <div class="key-features">
+        <h3>Lo que tienes que saber de este producto</h3>
+        <ul>
+          @for (spec of product.specifications; track $index) {
+            <li>
+              <strong>{{ spec.name }}:</strong> {{ spec.value }}
+            </li>
+          }
+        </ul>
+      </div>
+    }
 
-  <div class="color-selection">
-    <h4>Color: azul oscuro</h4>
-    <div class="color-options">
-      <div class="color-option active" style="background-color: #1a1a2e;"></div>
+    <div class="color-selection">
+      <h4>Color: azul oscuro</h4>
+      <div class="color-options">
+        <div class="color-option active" style="background-color: #1a1a2e;"></div>
+      </div>
+    </div>
+
+    <div class="purchase-options">
+      <h4>Opciones de compra:</h4>
+      <p>2 opciones desde US$ 418</p>
     </div>
   </div>
-
-  <div class="purchase-options">
-    <h4>Opciones de compra:</h4>
-    <p>2 opciones desde US$ 418</p>
-  </div>
-</div>
+}

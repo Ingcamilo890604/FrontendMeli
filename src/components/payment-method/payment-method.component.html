@@ -1,0 +1,42 @@
+<div class="payment-methods" *ngIf="processedPaymentMethods && processedPaymentMethods.length > 0">
+  <h4>Medios de pago</h4>
+  
+  <!-- Card payment methods -->
+  <ng-container *ngIf="getPaymentMethodsByType('card').length > 0">
+    <div class="payment-item">
+      <span class="payment-icon">{{ getPaymentMethodsByType('card')[0].icon }}</span>
+      <div>
+        <div class="payment-title">
+          ¡Paga en hasta {{ getMaxInstallments() }} cuotas sin interés!
+        </div>
+        <div class="payment-details">Tarjetas de débito</div>
+      </div>
+    </div>
+    
+    <div class="payment-cards">
+      <div class="card-icons">
+        <ng-container *ngFor="let method of getPaymentMethodsByType('card')">
+          <span class="card-icon" [ngClass]="getCardClass(method.name)">{{ method.name }}</span>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Cash payment methods -->
+  <ng-container *ngFor="let method of getPaymentMethodsByType('cash')">
+    <div class="payment-item">
+      <span class="payment-icon">{{ method.icon }}</span>
+      <div class="payment-title">{{ method.name }}</div>
+    </div>
+  </ng-container>
+
+  <!-- Transfer payment methods -->
+  <ng-container *ngFor="let method of getPaymentMethodsByType('transfer')">
+    <div class="payment-item">
+      <span class="payment-icon">{{ method.icon }}</span>
+      <div class="payment-title">{{ method.name }}</div>
+    </div>
+  </ng-container>
+
+  <a href="#" class="see-all-payments" (click)="onSeeAllPaymentsClick($event)">Conoce otros medios de pago</a>
+</div>

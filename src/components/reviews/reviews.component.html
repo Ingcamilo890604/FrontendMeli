@@ -1,0 +1,56 @@
+<div class="reviews-container" *ngIf="reviews">
+  <h2 class="reviews-title">Opiniones sobre el producto</h2>
+
+  <!-- Rating Summary Section -->
+  <div class="rating-summary" *ngIf="reviews.length > 0">
+    <div class="average-rating">
+      <div class="rating-number">{{ averageRating | number:'1.1-1' }}</div>
+      <div class="rating-stars">
+        <div class="stars">
+          <ng-container *ngFor="let star of getStars(averageRating)">
+            <span class="star" [class.filled]="star === 1" [class.half-filled]="star === 0.5">★</span>
+          </ng-container>
+        </div>
+        <div class="total-reviews">{{ reviews.length }} opiniones</div>
+      </div>
+    </div>
+
+    <div class="rating-distribution">
+      <div class="rating-bar" *ngFor="let i of [5, 4, 3, 2, 1]">
+        <div class="rating-label">{{ i }}</div>
+        <div class="progress-bar">
+          <div class="progress" [style.width.%]="getRatingPercentage(i)"></div>
+        </div>
+        <div class="rating-count">{{ ratingDistribution[i] }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews List -->
+  <div class="reviews-list" *ngIf="displayedReviews.length > 0">
+    <div class="review-item" *ngFor="let review of displayedReviews">
+      <div class="review-header">
+        <div class="reviewer-name">{{ review.userName }}</div>
+        <div class="review-date">{{ formatDate(review.createdAt) }}</div>
+      </div>
+      <div class="review-rating">
+        <div class="stars">
+          <ng-container *ngFor="let star of getStars(review.rating)">
+            <span class="star" [class.filled]="star === 1" [class.half-filled]="star === 0.5">★</span>
+          </ng-container>
+        </div>
+      </div>
+      <div class="review-comment">{{ review.comment }}</div>
+    </div>
+  </div>
+
+  <!-- Show More Button -->
+  <div class="show-more" *ngIf="showMoreVisible">
+    <button class="show-more-button" (click)="onShowMoreClick()">Ver más opiniones</button>
+  </div>
+
+  <!-- No Reviews Message -->
+  <div class="no-reviews" *ngIf="reviews.length === 0">
+    <p>Este producto aún no tiene opiniones. ¡Sé el primero en opinar!</p>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+.payment-methods h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.payment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.payment-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.payment-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.payment-details {
+  font-size: 12px;
+  color: #666;
+}
+
+.payment-cards {
+  margin: 12px 0 16px 36px;
+}
+
+.card-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.card-icon {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.card-icon.visa {
+  background: #1a1f71;
+}
+
+.card-icon.master {
+  background: #eb001b;
+}
+
+.card-icon.oca {
+  background: #0066cc;
+}
+
+.card-icon.amex {
+  background: #006fcf;
+}
+
+.see-all-payments {
+  color: #3483FA;
+  text-decoration: none;
+  font-size: 14px;
+  margin-left: 36px;
+}
+
+.see-all-payments:hover {
+  text-decoration: underline;
+}
+
+.payment-methods {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
+}

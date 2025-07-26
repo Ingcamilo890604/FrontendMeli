@@ -13,7 +13,7 @@ export interface Product {
   seller: Seller;
   shipping?: ShippingInfo;
   paymentMethods: PaymentMethod[];
-  rating?: ProductRating;
+  rating?: ProductRating | number;
   breadcrumb?: BreadcrumbItem[];
   stock?: number;
   reviews?: Review[];

@@ -1,0 +1,177 @@
+.reviews-container {
+  margin-top: 48px;
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+}
+
+.reviews-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  color: #333;
+}
+
+/* Rating Summary Section */
+.rating-summary {
+  display: flex;
+  margin-bottom: 30px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.average-rating {
+  display: flex;
+  align-items: center;
+  margin-right: 40px;
+  min-width: 150px;
+}
+
+.rating-number {
+  font-size: 36px;
+  font-weight: bold;
+  margin-right: 15px;
+  color: #333;
+}
+
+.rating-stars {
+  display: flex;
+  flex-direction: column;
+}
+
+.stars {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.star {
+  font-size: 18px;
+  color: #ddd;
+  margin-right: 2px;
+}
+
+.star.filled {
+  color: #ffc107;
+}
+
+.star.half-filled {
+  position: relative;
+  color: #ddd;
+}
+
+.star.half-filled::before {
+  content: '★';
+  position: absolute;
+  color: #ffc107;
+  width: 50%;
+  overflow: hidden;
+}
+
+.total-reviews {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Rating Distribution */
+.rating-distribution {
+  flex-grow: 1;
+  max-width: 400px;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.rating-label {
+  width: 20px;
+  text-align: right;
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+.progress-bar {
+  flex-grow: 1;
+  height: 8px;
+  background-color: #eee;
+  border-radius: 4px;
+  margin-right: 10px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: #ffc107;
+}
+
+.rating-count {
+  width: 30px;
+  text-align: right;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Reviews List */
+.reviews-list {
+  margin-bottom: 20px;
+}
+
+.review-item {
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.reviewer-name {
+  font-weight: 600;
+}
+
+.review-date {
+  font-size: 14px;
+  color: #666;
+}
+
+.review-rating {
+  margin-bottom: 10px;
+}
+
+.review-comment {
+  line-height: 1.5;
+}
+
+/* Show More Button */
+.show-more {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.show-more-button {
+  background-color: #fff;
+  border: 1px solid #3483fa;
+  color: #3483fa;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.show-more-button:hover {
+  background-color: #f0f8ff;
+}
+
+/* No Reviews Message */
+.no-reviews {
+  padding: 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  color: #666;
+}
