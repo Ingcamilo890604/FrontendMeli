@@ -18,18 +18,6 @@
       </div>
     }
 
-    <!-- Description Section -->
-    @if (getDescriptionParagraphs().length > 0) {
-      <div class="description-section">
-        <h2>Descripción</h2>
-        <div class="description-content">
-          @for (paragraph of getDescriptionParagraphs(); track $index) {
-            <p>
-              {{ paragraph }}
-            </p>
-          }
-        </div>
-      </div>
-    }
+    <!-- Description Section moved to product-detail component -->
   </div>
 }

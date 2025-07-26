@@ -30,16 +30,46 @@ import { ReviewsComponent } from '../reviews/reviews.component';
         <app-breadcrumb [items]="product?.breadcrumb || []"></app-breadcrumb>
         
         <div class="product-layout">
-          <div class="product-main">
-            <app-product-gallery [images]="product?.images || []"></app-product-gallery>
-            <app-product-info [product]="product"></app-product-info>
+          <div class="main-column">
+            <div class="product-gallery">
+              <app-product-gallery [images]="product?.images || []"></app-product-gallery>
+            </div>
+            <div class="color-selection-container" *ngIf="product">
+              <h4>Color: azul oscuro</h4>
+              <div class="color-options">
+                <div class="color-option active" style="background-color: #1a1a2e;"></div>
+                <div class="color-option" style="background-color: #4a4a6e;"></div>
+                <div class="color-option" style="background-color: #7a7a9e;"></div>
+              </div>
+            </div>
+            <!-- Product Description Section - moved below product image -->
+            <div class="product-description-container">
+              <h2>Descripción</h2>
+              <div class="description-content">
+                @if (product?.description) {
+                  @for (paragraph of getDescriptionParagraphs(); track $index) {
+                    <p>{{ paragraph }}</p>
+                  }
+                } @else {
+                  <p>Último modelo con características avanzadas y diseño moderno.</p>
+                }
+              </div>
+            </div>
           </div>
-          <div class="product-sidebar">
-            <app-seller-info [product]="product"></app-seller-info>
+          
+          <div class="info-column">
+            <div class="product-info-wrapper">
+              <app-product-info [product]="product"></app-product-info>
+            </div>
+            <div class="seller-info-wrapper">
+              <app-seller-info [product]="product"></app-seller-info>
+            </div>
+            <!-- Only show specifications if they exist -->
+            <div class="product-specs-wrapper" *ngIf="product && product.specifications && product.specifications.length > 0">
+              <app-product-specifications [product]="product"></app-product-specifications>
+            </div>
           </div>
         </div>
-
-        <app-product-specifications [product]="product"></app-product-specifications>
         <!-- Use a safe approach that satisfies the type checker -->
         @if (product && product.reviews && product.reviews.length > 0) {
           <app-reviews [reviews]="product.reviews"></app-reviews>
@@ -65,12 +95,176 @@ import { ReviewsComponent } from '../reviews/reviews.component';
       margin-bottom: 30px;
     }
     
-    .product-main {
-      flex: 1 1 700px;
+    .main-column {
+      flex: 0 0 60%; /* Takes up 60% of the width */
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 600px; /* Ensure minimum height for the column */
+      height: 100%; /* Allow it to grow with content */
     }
     
-    .product-sidebar {
-      flex: 0 1 300px;
+    .info-column {
+      flex: 0 0 calc(40% - 20px); /* Takes up 40% of the width, accounting for gap */
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .product-gallery {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    
+    .color-selection-container {
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+    
+    .color-selection-container h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+    
+    .color-options {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+    
+    .color-option.active {
+      border-color: #3483fa;
+    }
+    
+    /* Product Description Container Styles */
+    .product-description-container {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 20px;
+      margin-bottom: 20px;
+      width: 100%;
+      border-left: 4px solid #ff9800; /* Orange border to distinguish it */
+      flex-grow: 1; /* Make it expand to fill available vertical space */
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .product-description-container h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 20px 0;
+      color: #333;
+    }
+    
+    .description-content {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+      flex-grow: 1; /* Make it expand to fill available space */
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .description-content p {
+      margin-bottom: 16px;
+    }
+    
+    .description-content p:last-child {
+      margin-bottom: 0;
+    }
+    
+    /* Style for wrappers in the info-column */
+    .product-info-wrapper,
+    .seller-info-wrapper,
+    .product-specs-wrapper {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      border: 1px solid #f0f0f0;
+    }
+    
+    .product-info-wrapper {
+      border-left: 4px solid #3483fa;
+    }
+    
+    .seller-info-wrapper {
+      border-left: 4px solid #39b54a;
+      margin-top: 5px;
+    }
+    
+    .product-specs-wrapper {
+      border-left: 4px solid #ff6b6b;
+      margin-top: 5px;
+    }
+    
+    @media (max-width: 1200px) {
+      .product-layout {
+        gap: 15px;
+      }
+      
+      .main-column {
+        flex: 0 0 55%;
+      }
+      
+      .info-column {
+        flex: 0 0 calc(45% - 15px);
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .product-layout {
+        flex-wrap: wrap;
+      }
+      
+      .main-column {
+        flex: 0 0 100%;
+        margin-bottom: 20px;
+      }
+      
+      .info-column {
+        flex: 0 0 100%;
+      }
+      
+      /* On tablets, arrange the info components in a horizontal layout */
+      .info-column {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      
+      .product-info-wrapper {
+        flex: 0 0 100%;
+      }
+      
+      .seller-info-wrapper, 
+      .product-specs-wrapper {
+        flex: 0 0 calc(50% - 10px);
+        margin-top: 0;
+      }
+      
+      .seller-info-wrapper {
+        margin-right: 10px;
+      }
+      
+      .product-specs-wrapper {
+        margin-left: 10px;
+      }
     }
     
     @media (max-width: 768px) {
@@ -78,8 +272,38 @@ import { ReviewsComponent } from '../reviews/reviews.component';
         flex-direction: column;
       }
       
-      .product-main, .product-sidebar {
+      .main-column, .info-column {
         flex: 1 1 100%;
+        width: 100%;
+      }
+      
+      /* On mobile, stack all components vertically */
+      .info-column {
+        flex-direction: column;
+      }
+      
+      .seller-info-wrapper, 
+      .product-specs-wrapper {
+        flex: 0 0 100%;
+        margin: 0 0 20px 0;
+      }
+      
+      /* Reduce padding for mobile */
+      .product-info-wrapper,
+      .seller-info-wrapper,
+      .product-specs-wrapper,
+      .product-description-container {
+        padding: 15px;
+      }
+      
+      /* Adjust font sizes for mobile */
+      .product-description-container h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
+      
+      .description-content {
+        font-size: 14px;
       }
     }
   `]
@@ -93,6 +317,15 @@ export class ProductDetailComponent implements OnInit {
     private router: Router,
     private productService: ProductService
   ) {}
+  
+  /**
+   * Split the product description into paragraphs
+   * @returns Array of description paragraphs
+   */
+  getDescriptionParagraphs(): string[] {
+    if (!this.product?.description) return [];
+    return this.product.description.split('\n\n').filter(p => p.trim().length > 0);
+  }
   
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
