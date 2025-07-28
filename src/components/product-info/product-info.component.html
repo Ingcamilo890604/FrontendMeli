@@ -16,6 +16,13 @@
 
     <h1 class="product-title">{{ product.title }}</h1>
 
+    @if (product.productType) {
+      <div class="product-type">
+        <span class="type-label">Tipo:</span>
+        <span class="type-value">{{ product.productType }}</span>
+      </div>
+    }
+
     @if (product.rating) {
       <div class="rating">
         <div class="stars">

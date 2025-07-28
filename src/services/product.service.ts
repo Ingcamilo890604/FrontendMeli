@@ -11,6 +11,7 @@ export interface ProductSearchResult {
   currency?: string;
   image: string;
   description?: string;
+  productType?: string;
 }
 
 @Injectable({
@@ -99,19 +100,37 @@ export class ProductService {
     
     const normalizedQuery = query.toLowerCase().trim();
     
-    return this.getAllProducts().pipe(
+    // Call the dedicated search API endpoint
+    console.log(`Searching products with query: ${normalizedQuery}`);
+    return this.http.get<Product[]>(`${this.apiUrl}/products/search?q=${encodeURIComponent(normalizedQuery)}`).pipe(
       map(products => {
-        // Filter products that match the query
+        console.log(`Found ${products.length} products matching query: ${normalizedQuery}`);
+        // Map to simplified search results
         return products
-          .filter(product => 
-            product.title.toLowerCase().includes(normalizedQuery) || 
-            (product.description && product.description.toLowerCase().includes(normalizedQuery)) ||
-            (product.seller && product.seller.name.toLowerCase().includes(normalizedQuery))
-          )
-          // Map to simplified search results
           .map(product => this.mapToSearchResult(product))
           // Limit to 5 results for better UX
           .slice(0, 5);
+      }),
+      catchError(error => {
+        console.error(`Error searching products with query: ${normalizedQuery}`, error);
+        
+        // Fallback to client-side filtering if the API fails
+        console.log('Falling back to client-side search');
+        return this.getAllProducts().pipe(
+          map(products => {
+            // Filter products that match the query
+            return products
+              .filter(product => 
+                product.title.toLowerCase().includes(normalizedQuery) || 
+                (product.description && product.description.toLowerCase().includes(normalizedQuery)) ||
+                (product.seller && product.seller.name.toLowerCase().includes(normalizedQuery))
+              )
+              // Map to simplified search results
+              .map(product => this.mapToSearchResult(product))
+              // Limit to 5 results for better UX
+              .slice(0, 5);
+          })
+        );
       })
     );
   }
@@ -136,7 +155,8 @@ export class ProductService {
       price: product.price,
       currency: product.currency || 'US$',
       image: imageUrl,
-      description: product.description ? product.description.substring(0, 100) + '...' : undefined
+      description: product.description ? product.description.substring(0, 100) + '...' : undefined,
+      productType: product.productType
     };
   }
   
@@ -176,6 +196,7 @@ export class ProductService {
             isOfficialStore: false
           },
           reviews: [],
+          productType: 'Unknown',
           paymentMethods: [
             {
               id: 'default',
@@ -189,10 +210,32 @@ export class ProductService {
     );
   }
 
+  /**
+   * @deprecated Use getProductsByType instead. This method is kept for backward compatibility.
+   * According to the API documentation, we should use /products/type/{type} endpoint instead of /products/related.
+   */
   getRelatedProducts(): Observable<RelatedProduct[]> {
-    // Fetch related products from the backend API
-    return this.http.get<RelatedProduct[]>(`${this.apiUrl}/products/related`).pipe(
+    console.warn('getRelatedProducts is deprecated. Use getProductsByType instead.');
+    // Use a default type like "featured" or return empty array
+    return of([]);
+  }
+
+  /**
+   * Get products by type from the API
+   * @param type The product type to filter by (e.g., 'celular', 'televisor')
+   * @returns Observable of related products of the specified type
+   */
+  getProductsByType(type: string): Observable<RelatedProduct[]> {
+    if (!type || type.trim() === '') {
+      console.warn('No product type provided for getProductsByType');
+      return of([]);
+    }
+
+    console.log(`Fetching products with type: ${type}`);
+    // Fetch products by type from the backend API
+    return this.http.get<RelatedProduct[]>(`${this.apiUrl}/products/type/${encodeURIComponent(type)}`).pipe(
       map(products => {
+        console.log(`Found ${products.length} products of type ${type}`);
         // Process image paths in related products
         return products.map(product => {
           if (product.image) {
@@ -205,7 +248,7 @@ export class ProductService {
         });
       }),
       catchError(error => {
-        console.error('Error fetching related products:', error);
+        console.error(`Error fetching products of type ${type}:`, error);
         // Return empty array on error
         return of([]);
       })

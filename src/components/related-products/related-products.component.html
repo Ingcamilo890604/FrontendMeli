@@ -1,6 +1,6 @@
 @if (products.length > 0) {
   <div class="related-products">
-    <h2>Productos relacionados</h2>
+    <h2>{{ getTitle() }}</h2>
     <div class="products-container">
       <div class="products-scroll">
         @for (product of products; track $index) {

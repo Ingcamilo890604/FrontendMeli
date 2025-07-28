@@ -17,6 +17,7 @@ export interface Product {
   breadcrumb?: BreadcrumbItem[];
   stock?: number;
   reviews?: Review[];
+  productType?: string;
 }
 
 export interface ProductImage {

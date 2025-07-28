@@ -74,7 +74,7 @@ import { ReviewsComponent } from '../reviews/reviews.component';
         @if (product && product.reviews && product.reviews.length > 0) {
           <app-reviews [reviews]="product.reviews"></app-reviews>
         }
-        <app-related-products [products]="relatedProducts"></app-related-products>
+        <app-related-products [products]="relatedProducts" [productType]="product?.productType"></app-related-products>
       </div>
     </div>
   `,
@@ -354,14 +354,34 @@ export class ProductDetailComponent implements OnInit {
   }
   
   private loadRelatedProducts(): void {
-    this.productService.getRelatedProducts().subscribe({
-      next: (products) => {
-        this.relatedProducts = products;
-      },
-      error: (error) => {
-        console.error('Error loading related products:', error);
-      }
-    });
+    // Check if the product has a type
+    if (this.product && this.product.productType) {
+      const productType = this.product.productType; // Store in local variable to avoid null checks
+      console.log(`Loading products of type: ${productType}`);
+      
+      // Fetch products by type
+      this.productService.getProductsByType(productType).subscribe({
+        next: (products) => {
+          if (products && products.length > 0) {
+            console.log(`Found ${products.length} products of type ${productType}`);
+            this.relatedProducts = products;
+          } else {
+            console.log(`No products found of type ${productType}`);
+            // Set to empty array if no products found
+            this.relatedProducts = [];
+          }
+        },
+        error: (error) => {
+          console.error(`Error loading products of type ${productType}:`, error);
+          // Set to empty array on error
+          this.relatedProducts = [];
+        }
+      });
+    } else {
+      // If no product type, set to empty array
+      console.log('No product type available, cannot load related products');
+      this.relatedProducts = [];
+    }
   }
   
   /**
@@ -371,10 +391,10 @@ export class ProductDetailComponent implements OnInit {
   private processProductData(product: any) {
     console.log('Processing product data:', product);
     if (!product) return;
-    
+
     // Set the product
     this.product = product;
-    
+
     // Ensure we have a breadcrumb array even if the API doesn't provide one
     if (this.product && !this.product.breadcrumb) {
       this.product.breadcrumb = [
@@ -382,17 +402,17 @@ export class ProductDetailComponent implements OnInit {
         { label: this.product.title || 'Product Details' }
       ];
     }
-    
+
     // If we have stock but not availableQuantity, use stock as availableQuantity
     if (this.product && this.product.stock && !this.product.availableQuantity) {
       this.product.availableQuantity = this.product.stock;
     }
-    
+
     // If we don't have a currency, add a default one
     if (this.product && !this.product.currency) {
       this.product.currency = 'US$';
     }
-    
+
     // If we have reviews but not rating, calculate rating from reviews
     if (this.product && this.product.reviews && this.product.reviews.length > 0 && !this.product.rating) {
       const totalRating = this.product.reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
@@ -401,7 +421,7 @@ export class ProductDetailComponent implements OnInit {
         totalReviews: this.product.reviews.length
       };
     }
-    
+
     // Process images to ensure they are ProductImage objects
     if (this.product && this.product.images && this.product.images.length > 0) {
       console.log("Estas son las urls de las imagenes: " + this.product.images);
@@ -415,7 +435,7 @@ export class ProductDetailComponent implements OnInit {
         }));
       }
     }
-    
+
     // Add payment methods if they don't exist or are empty
     if (this.product) {
       console.log('Before adding payment methods:', this.product.paymentMethods);
