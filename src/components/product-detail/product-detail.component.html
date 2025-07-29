@@ -31,6 +31,16 @@
     @if (product && product.reviews && product.reviews.length > 0) {
       <app-reviews [reviews]="product.reviews"></app-reviews>
     }
-    <app-related-products [products]="relatedProducts" [productType]="product?.productType"></app-related-products>
+    <app-related-products 
+      [products]="relatedProducts" 
+      [productType]="product?.productType"
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      [hasNextPage]="hasNextPage"
+      [hasPreviousPage]="hasPreviousPage"
+      (pageChange)="onPageChange($event)"
+      (nextPageClick)="nextPage()"
+      (previousPageClick)="previousPage()">
+    </app-related-products>
   </div>
 </div>

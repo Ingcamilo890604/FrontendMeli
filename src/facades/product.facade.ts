@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Product, RelatedProduct, PaymentMethod } from '../models/product.model';
+import { Product, RelatedProduct, PaymentMethod, Page } from '../models/product.model';
 import { ProductService, ProductSearchResult } from '../services/product.service';
 import { ImageProcessingService } from '../services/image-processing.service';
 import { APP } from '../constants';
@@ -35,6 +35,17 @@ export class ProductFacade {
   getRelatedProducts(type: string): Observable<RelatedProduct[]> {
     return this.productService.getProductsByType(type);
   }
+  
+  /**
+   * Get a page of products by type
+   * @param type The product type
+   * @param page The page number (0-based)
+   * @param size The page size
+   * @returns Observable of Page<RelatedProduct>
+   */
+  getRelatedProductsPage(type: string, page: number = 0, size: number = 10): Observable<Page<RelatedProduct>> {
+    return this.productService.getProductsByTypePage(type, page, size);
+  }
 
   /**
    * Search products based on a query string
@@ -62,6 +73,7 @@ export class ProductFacade {
     this.calculateRatingFromReviews(processedProduct);
     this.processImages(processedProduct);
     this.ensurePaymentMethods(processedProduct);
+    this.ensureProductType(processedProduct);
 
     return processedProduct;
   }
@@ -138,6 +150,16 @@ export class ProductFacade {
   private ensurePaymentMethods(product: Product): void {
     if (!product.paymentMethods || product.paymentMethods.length === 0) {
       product.paymentMethods = this.getDefaultPaymentMethods();
+    }
+  }
+
+  /**
+   * Ensure product has a product type
+   * @param product The product to process
+   */
+  private ensureProductType(product: Product): void {
+    if (!product.productType) {
+      product.productType = APP.DEFAULTS.PRODUCT_TYPE;
     }
   }
 

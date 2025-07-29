@@ -5,6 +5,7 @@
 export const APP = {
   DEFAULTS: {
     CURRENCY: 'US$',
+    PRODUCT_TYPE: 'Unknown',
     BREADCRUMB: {
       HOME_LABEL: 'Inicio',
       HOME_URL: '/',

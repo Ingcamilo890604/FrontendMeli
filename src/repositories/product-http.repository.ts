@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, catchError } from 'rxjs';
-import { Product, RelatedProduct } from '../models/product.model';
+import { Observable, of, catchError, map } from 'rxjs';
+import { Product, RelatedProduct, Page } from '../models/product.model';
 import { ProductRepository } from './product.repository';
 import { API, APP } from '../constants';
 
@@ -80,6 +80,133 @@ export class ProductHttpRepository extends ProductRepository {
     return this.http.get<RelatedProduct[]>(`${this.apiUrl}${API.ENDPOINTS.PRODUCTS_BY_TYPE(type)}`).pipe(
       catchError(error => {
         return of([]);
+      })
+    );
+  }
+  
+  getProductsPage(page: number, size: number): Observable<Page<Product>> {
+    // Ensure page and size are valid numbers
+    const validPage = Math.max(0, page || 0);
+    const validSize = Math.max(1, size || 10);
+    
+    return this.http.get<Page<Product>>(
+      `${this.apiUrl}${API.ENDPOINTS.PRODUCTS_PAGE}?page=${validPage}&size=${validSize}`
+    ).pipe(
+      catchError(error => {
+        // Return an empty page on error
+        return of({
+          content: [],
+          totalElements: 0,
+          totalPages: 0,
+          page: validPage,
+          size: validSize,
+          hasPrevious: false,
+          hasNext: false
+        });
+      })
+    );
+  }
+  
+  getProductsByTypePage(type: string, page: number, size: number): Observable<Page<RelatedProduct>> {
+    if (!type || type.trim() === '') {
+      // Return an empty page if type is empty
+      return of({
+        content: [],
+        totalElements: 0,
+        totalPages: 0,
+        page: page || 0,
+        size: size || 10,
+        hasPrevious: false,
+        hasNext: false
+      });
+    }
+    
+    // Ensure page and size are valid numbers
+    const validPage = Math.max(0, page || 0);
+    const validSize = Math.max(1, size || 10);
+    
+    return this.http.get<Page<RelatedProduct>>(
+      `${this.apiUrl}${API.ENDPOINTS.PRODUCTS_BY_TYPE_PAGE(type)}?page=${validPage}&size=${validSize}`
+    ).pipe(
+      catchError(error => {
+        // Return an empty page on error
+        return of({
+          content: [],
+          totalElements: 0,
+          totalPages: 0,
+          page: validPage,
+          size: validSize,
+          hasPrevious: false,
+          hasNext: false
+        });
+      })
+    );
+  }
+  
+  searchProductsPage(query: string, page: number, size: number): Observable<Page<Product>> {
+    if (!query || query.trim() === '') {
+      // Return an empty page if query is empty
+      return of({
+        content: [],
+        totalElements: 0,
+        totalPages: 0,
+        page: page || 0,
+        size: size || 10,
+        hasPrevious: false,
+        hasNext: false
+      });
+    }
+    
+    const normalizedQuery = query.toLowerCase().trim();
+    
+    // Ensure page and size are valid numbers
+    const validPage = Math.max(0, page || 0);
+    const validSize = Math.max(1, size || 10);
+    
+    // Since we don't have a dedicated paginated search endpoint,
+    // we'll use the general paginated endpoint and filter the results
+    return this.http.get<Page<Product>>(
+      `${this.apiUrl}${API.ENDPOINTS.PRODUCTS_PAGE}?page=${validPage}&size=${validSize}`
+    ).pipe(
+      map(productPage => {
+        // Filter products based on the search query
+        const filteredContent = productPage.content.filter(product => {
+          // Search in title, description, and productType
+          return (
+            product.title.toLowerCase().includes(normalizedQuery) ||
+            (product.description && product.description.toLowerCase().includes(normalizedQuery)) ||
+            (product.productType && product.productType.toLowerCase().includes(normalizedQuery))
+          );
+        });
+        
+        // Calculate new pagination values based on filtered results
+        const totalElements = filteredContent.length;
+        const totalPages = Math.ceil(totalElements / validSize);
+        const hasPrevious = validPage > 0;
+        const hasNext = validPage < totalPages - 1;
+        
+        // Return a new page object with the filtered content
+        return {
+          content: filteredContent,
+          totalElements,
+          totalPages,
+          page: validPage,
+          size: validSize,
+          hasPrevious,
+          hasNext
+        };
+      }),
+      catchError(error => {
+        // Return an empty page on error
+        return of({
+          content: [],
+          totalElements: 0,
+          totalPages: 0,
+          page: validPage,
+          size: validSize,
+          hasPrevious: false,
+          hasNext: false
+        });
       })
     );
   }

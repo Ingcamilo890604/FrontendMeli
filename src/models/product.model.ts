@@ -90,3 +90,17 @@ export interface RelatedProduct {
   condition: string;
   freeShipping: boolean;
 }
+
+/**
+ * Generic interface for paginated responses from the API
+ * @template T The type of items in the content array
+ */
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  page: number;
+  size: number;
+  hasPrevious: boolean;
+  hasNext: boolean;
+}

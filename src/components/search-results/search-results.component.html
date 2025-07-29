@@ -74,5 +74,30 @@
         </div>
       }
     </div>
+    
+    <!-- Pagination controls -->
+    @if (totalPages > 1) {
+      <div class="pagination-controls">
+        <button 
+          class="pagination-btn" 
+          [disabled]="!hasPreviousPage" 
+          [class.disabled]="!hasPreviousPage"
+          (click)="previousPage()">
+          &laquo; Anterior
+        </button>
+        
+        <span class="pagination-info">
+          Página {{ currentPage + 1 }} de {{ totalPages }}
+        </span>
+        
+        <button 
+          class="pagination-btn" 
+          [disabled]="!hasNextPage" 
+          [class.disabled]="!hasNextPage"
+          (click)="nextPage()">
+          Siguiente &raquo;
+        </button>
+      </div>
+    }
   </div>
 </div>

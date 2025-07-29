@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product, RelatedProduct } from '../../models/product.model';
+import { Product, RelatedProduct, Page } from '../../models/product.model';
 import { ProductFacade } from '../../facades/product.facade';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { ProductGalleryComponent } from '../product-gallery/product-gallery.component';
@@ -35,6 +35,14 @@ export class ProductDetailComponent implements OnInit {
   product: Product | null = null;
   relatedProducts: RelatedProduct[] = [];
   selectedColor: string = 'azul oscuro';
+  
+  // Pagination state for related products
+  relatedProductsPage: Page<RelatedProduct> | null = null;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  totalPages: number = 0;
+  hasNextPage: boolean = false;
+  hasPreviousPage: boolean = false;
   
   constructor(
     private readonly route: ActivatedRoute,
@@ -73,20 +81,57 @@ export class ProductDetailComponent implements OnInit {
     const productType = this.product?.productType;
     
     if (productType) {
-      this.productFacade.getRelatedProducts(productType).subscribe({
-        next: (products) => {
-          if (products?.length > 0) {
-            this.relatedProducts = products;
-          } else {
-            this.relatedProducts = [];
-          }
+      this.productFacade.getRelatedProductsPage(productType, this.currentPage, this.pageSize).subscribe({
+        next: (page) => {
+          this.relatedProductsPage = page;
+          this.relatedProducts = page.content;
+          this.totalPages = page.totalPages;
+          this.hasNextPage = page.hasNext;
+          this.hasPreviousPage = page.hasPrevious;
         },
         error: (error) => {
           this.relatedProducts = [];
+          this.relatedProductsPage = null;
+          this.totalPages = 0;
+          this.hasNextPage = false;
+          this.hasPreviousPage = false;
         }
       });
     } else {
       this.relatedProducts = [];
+      this.relatedProductsPage = null;
+      this.totalPages = 0;
+      this.hasNextPage = false;
+      this.hasPreviousPage = false;
+    }
+  }
+  
+  /**
+   * Handle page change for related products
+   * @param page The new page number (0-based)
+   */
+  onPageChange(page: number): void {
+    if (page !== this.currentPage && page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadRelatedProducts();
+    }
+  }
+  
+  /**
+   * Go to the next page of related products
+   */
+  nextPage(): void {
+    if (this.hasNextPage) {
+      this.onPageChange(this.currentPage + 1);
+    }
+  }
+  
+  /**
+   * Go to the previous page of related products
+   */
+  previousPage(): void {
+    if (this.hasPreviousPage) {
+      this.onPageChange(this.currentPage - 1);
     }
   }
 }

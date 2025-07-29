@@ -23,6 +23,13 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
   isSearching: boolean = false;
   selectedIndex: number = -1;
   
+  // Pagination state
+  currentPage: number = 0;
+  pageSize: number = 10;
+  totalPages: number = 0;
+  hasNextPage: boolean = false;
+  hasPreviousPage: boolean = false;
+  
   private readonly searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
   
@@ -37,6 +44,7 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       switchMap(query => {
         this.isSearching = true;
+        // For suggestions, we still use the non-paginated version to keep it simple
         return this.productService.searchProducts(query);
       })
     ).subscribe({
@@ -120,16 +128,62 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
       return;
     }
     
+    // Reset pagination state when performing a new search
+    this.currentPage = 0;
+    
+    this.loadSearchResults();
+  }
+  
+  /**
+   * Load search results with pagination
+   */
+  private loadSearchResults(): void {
     this.isSearching = true;
-    this.productService.searchProducts(this.searchQuery).subscribe({
-      next: (results) => {
-        this.searchResults = results;
+    this.productService.searchProductsPage(this.searchQuery, this.currentPage, this.pageSize).subscribe({
+      next: (page) => {
+        this.searchResults = page.content;
+        this.totalPages = page.totalPages;
+        this.hasNextPage = page.hasNext;
+        this.hasPreviousPage = page.hasPrevious;
         this.showSuggestions = false;
         this.isSearching = false;
       },
       error: () => {
+        this.searchResults = [];
+        this.totalPages = 0;
+        this.hasNextPage = false;
+        this.hasPreviousPage = false;
         this.isSearching = false;
       }
     });
+  }
+  
+  /**
+   * Handle page change
+   * @param page The page number to navigate to
+   */
+  onPageChange(page: number): void {
+    if (page !== this.currentPage && page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadSearchResults();
+    }
+  }
+  
+  /**
+   * Go to the next page of search results
+   */
+  nextPage(): void {
+    if (this.hasNextPage) {
+      this.onPageChange(this.currentPage + 1);
+    }
+  }
+  
+  /**
+   * Go to the previous page of search results
+   */
+  previousPage(): void {
+    if (this.hasPreviousPage) {
+      this.onPageChange(this.currentPage - 1);
+    }
   }
 }
