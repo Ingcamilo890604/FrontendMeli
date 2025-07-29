@@ -3,10 +3,12 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
+import { appProviders } from './app/providers';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(),
-    provideRouter(routes)
+    provideRouter(routes),
+    ...appProviders
   ]
 });

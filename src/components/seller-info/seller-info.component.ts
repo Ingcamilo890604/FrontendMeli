@@ -12,11 +12,5 @@ import { PaymentMethodComponent } from '../payment-method/payment-method.compone
 })
 export class SellerInfoComponent implements OnChanges {
   @Input() product: Product | null = null;
-  
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['product'] && changes['product'].currentValue) {
-      console.log('Product in seller-info component:', this.product);
-      console.log('Payment methods in seller-info component:', this.product?.paymentMethods);
-    }
-  }
+
 }

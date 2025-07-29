@@ -36,7 +36,6 @@ import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap } 
           </div>
           <button class="search-button" (click)="onSearchButtonClick($event)">🔍</button>
           
-          <!-- Search suggestions dropdown -->
           @if (showSuggestions && searchResults.length > 0) {
             <div class="search-suggestions">
               @for (result of searchResults; track $index; let i = $index) {
@@ -56,7 +55,6 @@ import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap } 
             </div>
           }
           
-          <!-- Loading indicator -->
           @if (isSearching) {
             <div class="search-loading">
               <div class="search-spinner"></div>
@@ -65,7 +63,6 @@ import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap } 
         </div>
       </div>
 
-      <!-- Search Results View -->
       <div class="search-results">
         <div class="search-results-header">
           <h2>Resultados de búsqueda para "{{ searchQuery }}"</h2>
@@ -273,7 +270,6 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
   ) {}
   
   ngOnInit(): void {
-    // Set up search with debounce
     this.searchSubscription = this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -287,7 +283,6 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
         this.isSearching = false;
       },
       error: (error) => {
-        console.error('Error searching products:', error);
         this.isSearching = false;
       }
     });
@@ -371,7 +366,6 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
         this.isSearching = false;
       },
       error: (error) => {
-        console.error('Error searching products:', error);
         this.isSearching = false;
       }
     });

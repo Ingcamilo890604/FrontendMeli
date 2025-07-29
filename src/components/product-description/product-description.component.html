@@ -1,0 +1,12 @@
+<div class="product-description-container">
+  <h2>Descripción</h2>
+  <div class="description-content">
+    @if (product?.description) {
+      @for (paragraph of getDescriptionParagraphs(); track $index) {
+        <p>{{ paragraph }}</p>
+      }
+    } @else {
+      <p>Último modelo con características avanzadas y diseño moderno.</p>
+    }
+  </div>
+</div>

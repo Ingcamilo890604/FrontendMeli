@@ -1,0 +1,151 @@
+.product-detail-container {
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.main-column {
+  flex: 0 0 60%; /* Takes up 60% of the width */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 600px; /* Ensure minimum height for the column */
+  height: 100%; /* Allow it to grow with content */
+}
+
+.info-column {
+  flex: 0 0 calc(40% - 20px); /* Takes up 40% of the width, accounting for gap */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-gallery {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Common styles for all wrapper components */
+.product-info-wrapper,
+.seller-info-wrapper,
+.product-specs-wrapper {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  border: 1px solid #f0f0f0;
+}
+
+/* Specific border colors for each wrapper */
+.product-info-wrapper {
+  border-left: 4px solid #3483fa;
+}
+
+.seller-info-wrapper {
+  border-left: 4px solid #39b54a;
+  margin-top: 5px;
+}
+
+.product-specs-wrapper {
+  border-left: 4px solid #ff6b6b;
+  margin-top: 5px;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  /* Adjust layout for large screens */
+  .product-layout {
+    gap: 15px;
+  }
+  
+  .main-column {
+    flex: 0 0 55%;
+  }
+  
+  .info-column {
+    flex: 0 0 calc(45% - 15px);
+  }
+}
+
+@media (max-width: 992px) {
+  /* Tablet layout adjustments */
+  .product-layout {
+    flex-wrap: wrap;
+  }
+  
+  /* Full width columns on tablets */
+  .main-column {
+    flex: 0 0 100%;
+    margin-bottom: 20px;
+  }
+  
+  .info-column {
+    flex: 0 0 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  /* Wrapper adjustments for tablet layout */
+  .product-info-wrapper {
+    flex: 0 0 100%;
+  }
+  
+  /* Side-by-side layout for seller and specs on tablets */
+  .seller-info-wrapper, 
+  .product-specs-wrapper {
+    flex: 0 0 calc(50% - 10px);
+    margin-top: 0;
+  }
+  
+  .seller-info-wrapper {
+    margin-right: 10px;
+  }
+  
+  .product-specs-wrapper {
+    margin-left: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile layout adjustments */
+  .product-layout {
+    flex-direction: column;
+  }
+  
+  /* Full width columns on mobile */
+  .main-column, 
+  .info-column {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+  
+  /* Stack info column contents vertically on mobile */
+  .info-column {
+    flex-direction: column;
+  }
+  
+  /* Full width wrappers on mobile with consistent margins */
+  .seller-info-wrapper, 
+  .product-specs-wrapper {
+    flex: 0 0 100%;
+    margin: 0 0 20px 0;
+  }
+  
+  /* Reduce padding for all wrappers on mobile */
+  .product-info-wrapper,
+  .seller-info-wrapper,
+  .product-specs-wrapper {
+    padding: 15px;
+  }
+}

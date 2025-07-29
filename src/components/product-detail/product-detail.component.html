@@ -1,0 +1,36 @@
+<div class="product-detail-container">
+  <div class="container">
+    <app-breadcrumb [items]="product?.breadcrumb || []"></app-breadcrumb>
+    
+    <div class="product-layout">
+      <div class="main-column">
+        <div class="product-gallery">
+          <app-product-gallery [images]="product?.images || []"></app-product-gallery>
+        </div>
+        <app-color-selector 
+          [product]="product"
+          (colorSelected)="onColorSelected($event)">
+        </app-color-selector>
+        <app-product-description [product]="product"></app-product-description>
+      </div>
+      
+      <div class="info-column">
+        <div class="product-info-wrapper">
+          <app-product-info [product]="product"></app-product-info>
+        </div>
+        <div class="seller-info-wrapper">
+          <app-seller-info [product]="product"></app-seller-info>
+        </div>
+        <!-- Only show specifications if they exist -->
+        <div class="product-specs-wrapper" *ngIf="product && product.specifications && product.specifications.length > 0">
+          <app-product-specifications [product]="product"></app-product-specifications>
+        </div>
+      </div>
+    </div>
+    <!-- Use a safe approach that satisfies the type checker -->
+    @if (product && product.reviews && product.reviews.length > 0) {
+      <app-reviews [reviews]="product.reviews"></app-reviews>
+    }
+    <app-related-products [products]="relatedProducts" [productType]="product?.productType"></app-related-products>
+  </div>
+</div>

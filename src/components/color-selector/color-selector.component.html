@@ -1,0 +1,13 @@
+<div class="color-selection-container" *ngIf="product">
+  <h4>Color: {{ getActiveColorName() }}</h4>
+  <div class="color-options">
+    @for (option of colorOptions; track option.code) {
+      <div 
+        class="color-option" 
+        [class.active]="option.isActive"
+        [style.background-color]="option.code"
+        (click)="selectColor(option)">
+      </div>
+    }
+  </div>
+</div>
