@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Product, RelatedProduct, PaymentMethod } from '../models/product.model';
 import { ProductService, ProductSearchResult } from '../services/product.service';
 import { ImageProcessingService } from '../services/image-processing.service';
+import { APP } from '../constants';
 
 /**
  * Facade for product-related operations
@@ -71,8 +72,8 @@ export class ProductFacade {
    */
   private ensureBreadcrumb(product: Product): void {
     product.breadcrumb ??= [
-      { label: 'Inicio', url: '/' },
-      { label: product.title || 'Product Details' }
+      { label: APP.DEFAULTS.BREADCRUMB.HOME_LABEL, url: APP.DEFAULTS.BREADCRUMB.HOME_URL },
+      { label: product.title || APP.DEFAULTS.BREADCRUMB.PRODUCT_DETAILS_LABEL }
     ];
   }
 
@@ -92,7 +93,7 @@ export class ProductFacade {
    */
   private ensureCurrency(product: Product): void {
     if (!product.currency) {
-      product.currency = 'US$';
+      product.currency = APP.DEFAULTS.CURRENCY;
     }
   }
 
@@ -150,29 +151,29 @@ export class ProductFacade {
         id: 'visa',
         name: 'Visa',
         type: 'card',
-        installments: 12,
-        icon: '💳'
+        installments: APP.DEFAULTS.PAYMENT_METHODS.INSTALLMENTS.STANDARD,
+        icon: APP.DEFAULTS.PAYMENT_METHODS.ICONS.CARD
       },
       {
         id: 'mastercard',
         name: 'Mastercard',
         type: 'card',
-        installments: 12,
-        icon: '💳'
+        installments: APP.DEFAULTS.PAYMENT_METHODS.INSTALLMENTS.STANDARD,
+        icon: APP.DEFAULTS.PAYMENT_METHODS.ICONS.CARD
       },
       {
         id: 'amex',
         name: 'American Express',
         type: 'card',
-        installments: 6,
-        icon: '💳'
+        installments: APP.DEFAULTS.PAYMENT_METHODS.INSTALLMENTS.LIMITED,
+        icon: APP.DEFAULTS.PAYMENT_METHODS.ICONS.CARD
       },
       {
         id: 'cash',
         name: 'Efectivo',
         type: 'cash',
-        installments: 1,
-        icon: '💵'
+        installments: APP.DEFAULTS.PAYMENT_METHODS.INSTALLMENTS.SINGLE,
+        icon: APP.DEFAULTS.PAYMENT_METHODS.ICONS.CASH
       }
     ];
   }
@@ -184,6 +185,6 @@ export class ProductFacade {
    */
   getDescriptionParagraphs(description: string | undefined): string[] {
     if (!description) return [];
-    return description.split('\n\n').filter(p => p.trim().length > 0);
+    return description.split(APP.TEXT_PROCESSING.PARAGRAPH_SEPARATOR).filter(p => p.trim().length > 0);
   }
 }

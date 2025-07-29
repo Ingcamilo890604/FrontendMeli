@@ -3,6 +3,7 @@ import { Observable, of, map } from 'rxjs';
 import { Product, RelatedProduct } from '../models/product.model';
 import { ProductRepository } from '../repositories/product.repository';
 import { ImageProcessingService } from './image-processing.service';
+import { UI, APP } from '../constants';
 
 export interface ProductSearchResult {
   id: string;
@@ -47,7 +48,7 @@ export class ProductService {
       map(products => {
         return products
           .map(product => this.mapToSearchResult(product))
-          .slice(0, 5);
+          .slice(0, UI.SEARCH.MAX_RESULTS);
       })
     );
   }
@@ -66,9 +67,9 @@ export class ProductService {
       id: product.id,
       title: product.title,
       price: product.price,
-      currency: product.currency || 'US$',
+      currency: product.currency || APP.DEFAULTS.CURRENCY,
       image: imageUrl,
-      description: product.description ? product.description.substring(0, 100) + '...' : undefined,
+      description: product.description ? product.description.substring(0, UI.SEARCH.DESCRIPTION_PREVIEW_LENGTH) + '...' : undefined,
       productType: product.productType
     };
   }

@@ -1,0 +1,78 @@
+<div class="search-results-container">
+  <div class="search-bar">
+    <div class="search-container">
+      <div class="input-wrapper">
+        <input 
+          type="text" 
+          placeholder="Buscar productos, marcas y más..." 
+          class="search-input"
+          [(ngModel)]="searchQuery"
+          (input)="onSearchInput()"
+          (focus)="onSearchFocus()"
+          (blur)="onSearchBlur()"
+          (keydown)="onSearchKeydown($event)">
+        @if (searchQuery.length > 0) {
+          <button 
+            class="clear-button"
+            (mousedown)="clearSearch($event)">
+            ✕
+          </button>
+        }
+      </div>
+      <button class="search-button" (click)="onSearchButtonClick($event)">🔍</button>
+      
+      @if (showSuggestions && searchResults.length > 0) {
+        <div class="search-suggestions">
+          @for (result of searchResults; track $index; let i = $index) {
+            <div 
+              class="suggestion-item" 
+              [class.selected]="i === selectedIndex"
+              (mousedown)="selectProduct(result)">
+              <div class="suggestion-image">
+                <img [src]="result.image" [alt]="result.title">
+              </div>
+              <div class="suggestion-details">
+                <div class="suggestion-title">{{ result.title }}</div>
+                <div class="suggestion-price">{{ result.currency }} {{ result.price }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+      
+      @if (isSearching) {
+        <div class="search-loading">
+          <div class="search-spinner"></div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="search-results">
+    <div class="search-results-header">
+      <h2>Resultados de búsqueda para "{{ searchQuery }}"</h2>
+      @if (searchResults.length > 0) {
+        <p>{{ searchResults.length }} productos encontrados</p>
+      } @else {
+        <p>No se encontraron productos</p>
+      }
+    </div>
+    
+    <div class="search-results-grid">
+      @for (result of searchResults; track $index) {
+        <div class="search-result-card" (click)="selectProduct(result)">
+          <div class="search-result-image">
+            <img [src]="result.image" [alt]="result.title">
+          </div>
+          <div class="search-result-details">
+            <h3 class="search-result-title">{{ result.title }}</h3>
+            <p class="search-result-price">{{ result.currency }} {{ result.price }}</p>
+            @if (result.description) {
+              <p class="search-result-description">{{ result.description }}</p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -3,23 +3,24 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, catchError } from 'rxjs';
 import { Product, RelatedProduct } from '../models/product.model';
 import { ProductRepository } from './product.repository';
+import { API, APP } from '../constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductHttpRepository extends ProductRepository {
-  private readonly apiUrl = 'http://localhost:8085/api';
+  private readonly apiUrl = API.BASE_URL;
   
   constructor(private readonly http: HttpClient) {
     super();
   }
 
   getProduct(id: string): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
+    return this.http.get<Product>(`${this.apiUrl}${API.ENDPOINTS.PRODUCT_BY_ID(id)}`);
   }
   
   getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/products`).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}${API.ENDPOINTS.PRODUCTS}`).pipe(
       catchError(error => {
         return of([]);
       })
@@ -33,7 +34,7 @@ export class ProductHttpRepository extends ProductRepository {
     
     const normalizedQuery = query.toLowerCase().trim();
     
-    return this.http.get<Product[]>(`${this.apiUrl}/products/search?q=${encodeURIComponent(normalizedQuery)}`).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}${API.ENDPOINTS.PRODUCT_SEARCH}?q=${encodeURIComponent(normalizedQuery)}`).pipe(
       catchError(error => {
         return this.getAllProducts();
       })
@@ -41,29 +42,29 @@ export class ProductHttpRepository extends ProductRepository {
   }
   
   getMockProduct(id: string): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/products/mock/${id}`).pipe(
+    return this.http.get<Product>(`${this.apiUrl}${API.ENDPOINTS.PRODUCT_MOCK(id)}`).pipe(
       catchError(error => {
         return of({
           id: id,
-          title: 'Product Not Available',
+          title: APP.DEFAULTS.MOCK_PRODUCT.TITLE,
           price: 0,
-          description: 'This product is currently not available.',
+          description: APP.DEFAULTS.MOCK_PRODUCT.DESCRIPTION,
           images: [],
           stock: 0,
           availableQuantity: 0,
           seller: {
-            id: '0',
-            name: 'Unknown Seller',
+            id: APP.DEFAULTS.MOCK_PRODUCT.SELLER_ID,
+            name: APP.DEFAULTS.MOCK_PRODUCT.SELLER_NAME,
             isOfficialStore: false
           },
           reviews: [],
-          productType: 'Unknown',
+          productType: APP.DEFAULTS.MOCK_PRODUCT.PRODUCT_TYPE,
           paymentMethods: [
             {
-              id: 'default',
-              name: 'Default Payment Method',
-              type: 'card',
-              icon: '💳'
+              id: APP.DEFAULTS.MOCK_PRODUCT.PAYMENT_METHOD_ID,
+              name: APP.DEFAULTS.MOCK_PRODUCT.PAYMENT_METHOD_NAME,
+              type: 'card' as const,
+              icon: APP.DEFAULTS.PAYMENT_METHODS.ICONS.CARD
             }
           ]
         });
@@ -76,7 +77,7 @@ export class ProductHttpRepository extends ProductRepository {
       return of([]);
     }
 
-    return this.http.get<RelatedProduct[]>(`${this.apiUrl}/products/type/${encodeURIComponent(type)}`).pipe(
+    return this.http.get<RelatedProduct[]>(`${this.apiUrl}${API.ENDPOINTS.PRODUCTS_BY_TYPE(type)}`).pipe(
       catchError(error => {
         return of([]);
       })
