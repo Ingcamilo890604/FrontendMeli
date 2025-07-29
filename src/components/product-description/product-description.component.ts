@@ -13,7 +13,7 @@ import { ProductFacade } from '../../facades/product.facade';
 export class ProductDescriptionComponent {
   @Input() product: Product | null = null;
   
-  constructor(private productFacade: ProductFacade) {}
+  constructor(private readonly productFacade: ProductFacade) {}
   
   getDescriptionParagraphs(): string[] {
     if (!this.product) return [];

@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
 import { Product, RelatedProduct } from '../models/product.model';
-import { ProductSearchResult } from '../services/product.service';
 
 /**
  * Repository abstract class for product data access

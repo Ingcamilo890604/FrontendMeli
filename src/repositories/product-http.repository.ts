@@ -8,9 +8,9 @@ import { ProductRepository } from './product.repository';
   providedIn: 'root'
 })
 export class ProductHttpRepository extends ProductRepository {
-  private apiUrl = 'http://localhost:8085/api';
+  private readonly apiUrl = 'http://localhost:8085/api';
   
-  constructor(private http: HttpClient) { 
+  constructor(private readonly http: HttpClient) {
     super();
   }
 
@@ -62,7 +62,7 @@ export class ProductHttpRepository extends ProductRepository {
             {
               id: 'default',
               name: 'Default Payment Method',
-              type: 'card' as 'card',
+              type: 'card',
               icon: '💳'
             }
           ]

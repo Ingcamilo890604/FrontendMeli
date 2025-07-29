@@ -19,8 +19,8 @@ export interface ProductSearchResult {
 })
 export class ProductService {
   constructor(
-    private productRepository: ProductRepository,
-    private imageProcessingService: ImageProcessingService
+    private readonly productRepository: ProductRepository,
+    private readonly imageProcessingService: ImageProcessingService
   ) { }
 
   getProduct(id: string): Observable<Product> {
@@ -42,9 +42,7 @@ export class ProductService {
     if (!query || query.trim() === '') {
       return of([]);
     }
-    
-    const normalizedQuery = query.toLowerCase().trim();
-    
+
     return this.productRepository.searchProducts(query).pipe(
       map(products => {
         return products
@@ -58,7 +56,7 @@ export class ProductService {
     let imageUrl = '';
     if (product.images && product.images.length > 0) {
       if (typeof product.images[0] === 'string') {
-        imageUrl = product.images[0] as string;
+        imageUrl = product.images[0];
       } else {
         imageUrl = (product.images[0] as any).url || '';
       }

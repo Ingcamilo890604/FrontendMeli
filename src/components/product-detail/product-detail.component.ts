@@ -37,9 +37,9 @@ export class ProductDetailComponent implements OnInit {
   selectedColor: string = 'azul oscuro';
   
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private productFacade: ProductFacade
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly productFacade: ProductFacade
   ) {}
   
   onColorSelected(color: string): void {
@@ -70,12 +70,12 @@ export class ProductDetailComponent implements OnInit {
   }
   
   private loadRelatedProducts(): void {
-    if (this.product && this.product.productType) {
-      const productType = this.product.productType;
-      
+    const productType = this.product?.productType;
+    
+    if (productType) {
       this.productFacade.getRelatedProducts(productType).subscribe({
         next: (products) => {
-          if (products && products.length > 0) {
+          if (products?.length > 0) {
             this.relatedProducts = products;
           } else {
             this.relatedProducts = [];

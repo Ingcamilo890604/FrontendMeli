@@ -261,12 +261,12 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
   isSearching: boolean = false;
   selectedIndex: number = -1;
   
-  private searchSubject = new Subject<string>();
+  private readonly searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
   
   constructor(
-    private productService: ProductService,
-    private router: Router
+    private readonly productService: ProductService,
+    private readonly router: Router
   ) {}
   
   ngOnInit(): void {

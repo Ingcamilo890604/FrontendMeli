@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Product, RelatedProduct, PaymentMethod } from '../models/product.model';
 import { ProductService, ProductSearchResult } from '../services/product.service';
 import { ImageProcessingService } from '../services/image-processing.service';
@@ -13,8 +13,8 @@ import { ImageProcessingService } from '../services/image-processing.service';
 })
 export class ProductFacade {
   constructor(
-    private productService: ProductService,
-    private imageProcessingService: ImageProcessingService
+    private readonly productService: ProductService,
+    private readonly imageProcessingService: ImageProcessingService
   ) { }
 
   /**
@@ -70,12 +70,10 @@ export class ProductFacade {
    * @param product The product to process
    */
   private ensureBreadcrumb(product: Product): void {
-    if (!product.breadcrumb) {
-      product.breadcrumb = [
-        { label: 'Inicio', url: '/' },
-        { label: product.title || 'Product Details' }
-      ];
-    }
+    product.breadcrumb ??= [
+      { label: 'Inicio', url: '/' },
+      { label: product.title || 'Product Details' }
+    ];
   }
 
   /**
