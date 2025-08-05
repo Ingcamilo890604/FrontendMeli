@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    restart: unless-stopped
+    # If you need environment variables, uncomment and add them here
+    # environment:
+    #   - API_URL=http://api-server
+    # If you need to connect to other services, uncomment and add them here
+    # depends_on:
+    #   - api-service
+    # For development with hot-reload, uncomment these lines
+    # volumes:
+    #   - ./src:/app/src

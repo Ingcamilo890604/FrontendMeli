@@ -72,6 +72,48 @@ npm run build
 
 Esto creará una compilación lista para producción en el directorio `dist/demo`. Los artefactos de compilación estarán optimizados para el rendimiento.
 
+### Ejecutando con Docker
+
+Alternativamente, puedes ejecutar la aplicación utilizando Docker, lo que elimina la necesidad de instalar Node.js, npm y otras dependencias localmente.
+
+#### Requisitos Previos para Docker
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/) (incluido con Docker Desktop en Windows y Mac)
+
+#### Ejecutar con Docker Compose
+
+Para iniciar la aplicación con Docker Compose:
+
+```
+docker-compose up
+```
+
+Esto construirá la imagen Docker si es necesario y ejecutará la aplicación. Una vez que el contenedor esté en funcionamiento, puedes acceder a la aplicación en tu navegador:
+
+```
+http://localhost:4200
+```
+
+Para ejecutar en segundo plano (modo detached):
+
+```
+docker-compose up -d
+```
+
+Para detener la aplicación:
+
+```
+docker-compose down
+```
+
+Si has realizado cambios en el código y necesitas reconstruir la imagen:
+
+```
+docker-compose up --build
+```
+
+La aplicación se sirve a través de Nginx en el contenedor Docker, con una configuración personalizada para manejar correctamente el enrutamiento del lado del cliente en la aplicación Angular.
+
 ## Estructura del Proyecto
 
 - **src/app**: Módulo principal de la aplicación
